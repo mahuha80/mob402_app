@@ -4,9 +4,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const Tab = createBottomTabNavigator();
 
 export default function Product() {
+  const productAPI ='http://192.168.0.104:3000/api/product/getAllProducts';
   return (
     <View style={styles.container}>
-      <Text>Product</Text>
+      <Text>Product AAAAA</Text>
     </View>
   );
 }

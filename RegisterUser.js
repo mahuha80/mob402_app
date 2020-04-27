@@ -9,34 +9,35 @@ export default function RegisterUser({ navigation }) {
   const [password, setPassword] = useState("");
   const [retype, setRetype] = useState("");
   const [resRegister, setResRegister] = useState();
-  fetchData = async () => {
-    if (
-      username.length == 0 ||
-      password.length == 0 ||
-      retype.length == 0 ||
-      username.length < 5 ||
-      password.length < 5 ||
-      retype.length < 5
-    ) {
-      Alert.alert("Vui lòng nhập đầy đủ các trường");
-    } else if (password !== retype) {
-      Alert.alert("Vui lòng nhập mật khẩu trùng nhau");
-    } else {
-      fetch("http://192.168.0.104:3000/api/user/register", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: `${username}`,
-          password: `${password}`,
-        }),
-      })
-        .then((response) => response.json())
-        .then((json) => setResRegister(json));
-      try {
-        if (resRegister.status === "failed") {
+  async function postNewUser(){
+    {
+      if (
+        username.length == 0 ||
+        password.length == 0 ||
+        retype.length == 0 ||
+        username.length < 5 ||
+        password.length < 5 ||
+        retype.length < 5
+      ) {
+        Alert.alert("Vui lòng nhập đầy đủ các trường");
+      } else if (password !== retype) {
+        Alert.alert("Vui lòng nhập mật khẩu trùng nhau");
+      } else {
+       let responce = await fetch("http://192.168.0.104:3000/api/user/register", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: `${username}`,
+            password: `${password}`,
+          }),
+        })
+        let json = await responce.json();
+        setResRegister(json)
+        console.log(resRegister)
+        if (resRegister.status == "failed") {
           setUsername("");
           setPassword("");
           setResRegister("");
@@ -50,11 +51,9 @@ export default function RegisterUser({ navigation }) {
           Alert.alert(resRegister.status);
           navigation.navigate("LoginUser");
         }
-      } catch (error) {
-        if (error) throw error;
       }
     }
-  };
+  }
   return (
     <View style={styles.container}>
       <View
@@ -122,7 +121,10 @@ export default function RegisterUser({ navigation }) {
           }}
         />
       </View>
-      <Button title="Register" onPress={this.fetchData()} />
+      <Button
+        title="Register"
+        onPress={() => postNewUser()}
+      />
     </View>
   );
 }

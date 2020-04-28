@@ -4,9 +4,10 @@ import {
   Text,
   View,
   FlatList,
-  SafeAreaView,
   Image,
+  TouchableOpacity,
 } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 const productAPI = "http://192.168.0.104:3000/api/product/getAllProducts";
 const base = "http://192.168.0.104:3000/";
 async function getProductFromAPI() {
@@ -19,17 +20,62 @@ async function getProductFromAPI() {
   }
 }
 
-function Item({ image ,name,price,type}) {
+function Item({ image, name, price, type }) {
   return (
-    <View style={styles.item}>
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-start",
+      }}
+    >
       <Image
         source={{ uri: base + image }}
-        style={{ width: 200, height: 100 }}
+        style={{
+          width: 100,
+          height: 100,
+          marginRight: 70,
+          marginTop: 10,
+          alignSelf: "flex-end",
+        }}
       ></Image>
-      <Text>{name}</Text>
-      <Text>{price}</Text>
-      <Text>{type}</Text>
-
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          marginRight: 40,
+          alignItems: "center",
+          justifyContent: "flex-start",
+          marginTop: 20,
+        }}
+      >
+        <Text style={{ fontSize: 25,fontWeight:'bold',color:'#545478' }}>{name}</Text>
+        <Text style={{color:'blue',marginBottom:10}}>{price}</Text>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            height: 30,
+          }}
+        >
+          <TouchableOpacity style={styles.quanityBtn}>
+            <Text style={styles.quanityText}>-</Text>
+          </TouchableOpacity>
+          <TextInput
+            style={{
+              width: 50,
+              height: 20,
+              backgroundColor: "white",
+              borderWidth: 0.4,
+              borderColor: "#a5a5c0",
+            }}
+            editable={false}
+          ></TextInput>
+          <TouchableOpacity style={styles.quanityBtn}>
+            <Text style={styles.quanityText}>+</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }
@@ -43,7 +89,14 @@ export default function Product() {
     <View style={styles.container}>
       <FlatList
         data={data}
-        renderItem={({ item }) => <Item image={item.image} name={item.name} price={item.price} type={item.type} />}
+        renderItem={({ item ,index}) => (
+          <Item
+            image={item.image}
+            name={item.name}
+            price={item.price}
+            type={item.type}
+          />
+        )}
         keyExtractor={(item) => item._id}
       />
     </View>
@@ -56,5 +109,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  quanityText: {
+    color: "#a5a5c0",
+    textAlign: "center",
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  quanityBtn: {
+    backgroundColor: "white",
+    borderWidth: 0.4,
+    borderColor: "#a5a5c0",
+    height:20
   },
 });
